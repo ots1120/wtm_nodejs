@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import schemaOptions from '../common/schemaOptions';
 
-const RatingSchema = new mongoose.Schema(
+const reviewScaleSchema = new mongoose.Schema(
   {
     taste: {
       type: Number,
@@ -31,7 +31,7 @@ const RatingSchema = new mongoose.Schema(
   schemaOptions
 );
 
-// Rating 모델 생성 및 내보내기
-const RatingModel = mongoose.model('Rating', RatingSchema);
+// ReviewScaleSchema 모델 생성 및 내보내기
+const ReviewScaleSchema = mongoose.model('ReviewScale', reviewScaleSchema);
 
-export default RatingModel;
+export default ReviewScaleSchema;

@@ -1,9 +1,9 @@
-import StoreModel from '../../models/user/StoreModel';
-import MenuModel from '../../models/user/MenuModel';
-import TicketModel from '../../models/user/TicketModel';
-import ReviewModel from '../../models/user/ReviewModel';
-import RatingModel from '../../models/user/RatingModel';
-import NoticeModel from '../../models/user/NoticeModel';
+import StoreModel from '../../models/store/StoreModel';
+import MenuModel from '../../models/user/menu/MenuModel';
+import TicketModel from '../../models/ticket/TicketModel';
+import ReviewModel from '../../models/review/ReviewModel';
+import ReviewScaleModel from '../../models/review/ReviewScaleModel';
+import NoticeModel from '../../models/notice/NoticeModel';
 
 /*
  * 가게 정보 API
@@ -103,7 +103,7 @@ const addReview = async (req, res) => {
     }
 
     // 평점 정보 저장
-    const newRating = new RatingModel({
+    const newRating = new ReviewScaleModel({
       taste: req.body.taste,
       cleanliness: req.body.cleanliness,
       mood: req.body.mood,

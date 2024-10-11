@@ -9,7 +9,7 @@ const ticketSchema = new mongoose.Schema(
       ref: 'Store',
       required: true,
     }, // 특정 store와 연관된 티켓 정보
-    remainingTickets: Number,
+    price: { type: Number, required: true },
   },
   schemaOptions
 );

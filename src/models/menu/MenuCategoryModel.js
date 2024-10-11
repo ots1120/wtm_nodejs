@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import schemaOptions from '../common/schemaOptions';
+import schemaOptions from '../../common/schemaOptions';
 
 /*
  * mainMenu, soupMenu, etcMenu

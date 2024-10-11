@@ -3,18 +3,35 @@ import schemaOptions from '../common/schemaOptions';
 
 const userSchema = new mongoose.Schema(
   {
-    username: {
+    email: {
+      type: String,
+      required: true,
+    },
+    name: {
       type: String,
       required: true,
       unique: true,
       trim: true,
       maxlength: 50,
     },
+    role: {
+      type: String,
+      required: true,
+    },
+    address: {
+      type: String,
+      required: true,
+    },
     password: {
       type: String,
       required: true,
     },
-    nickname: String,
+    phone: {
+      type: String,
+    },
+    profilePicture: {
+      type: String,
+    },
   },
   schemaOptions
 );
