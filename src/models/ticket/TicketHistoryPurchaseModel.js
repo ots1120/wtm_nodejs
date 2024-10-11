@@ -23,9 +23,9 @@ const ticketHistoryPurchaseSchema = new mongoose.Schema(
   schemaOptions
 );
 
-const TicketHistoryPurchase = mongoose.model(
+const TicketHistoryPurchaseModel = mongoose.model(
   'TicketHistoryPurchase',
   ticketHistoryPurchaseSchema
 );
 
-export default TicketHistoryPurchase;
+export default TicketHistoryPurchaseModel;

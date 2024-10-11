@@ -23,9 +23,9 @@ const ticketHistoryUsageSchema = new mongoose.Schema(
   schemaOptions
 );
 
-const TicketHistoryUsage = mongoose.model(
+const TicketHistoryUsageModel = mongoose.model(
   'TicketHistoryUsage',
   ticketHistoryUsageSchema
 );
 
-export default TicketHistoryUsage;
+export default TicketHistoryUsageModel;

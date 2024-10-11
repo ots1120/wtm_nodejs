@@ -28,9 +28,9 @@ const ticketHistoryRefundSchema = new mongoose.Schema(
   schemaOptions
 );
 
-const TicketHistoryRefund = mongoose.model(
+const TicketHistoryRefundModel = mongoose.model(
   'TicketHistoryRefund',
   ticketHistoryRefundSchema
 );
 
-export default TicketHistoryRefund;
+export default TicketHistoryRefundModel;

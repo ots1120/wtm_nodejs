@@ -4,26 +4,23 @@ import schemaOptions from '../common/schemaOptions';
 // Store 스키마 정의
 const storeSnsSchema = new mongoose.Schema(
   {
-    name: { type: String, required: true },
-    address: { type: String, required: true },
-    contact: { type: String, required: true },
-    adminId: {
+    storeId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
+      ref: 'Store',
       required: true,
     },
-    openTime: {
-      type: String, // TIME 타입은 String으로 변환
+    type: {
+      type: String,
       required: true,
     },
-    closeTime: {
-      type: String, // TIME 타입은 String으로 변환
+    url: {
+      type: String,
       required: true,
     },
   },
   schemaOptions
 );
 
-const StoreSnsSchema = mongoose.model('StoreSns', storeSnsSchema);
+const StoreSnsModel = mongoose.model('StoreSns', storeSnsSchema);
 
-export default StoreSnsSchema;
+export default StoreSnsModel;
