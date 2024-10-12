@@ -1,37 +1,21 @@
 import mongoose from 'mongoose';
 import schemaOptions from '../common/schemaOptions';
 
+/* 
+    name: taste, cleanliness, mood, kindness
+ */
 const reviewScaleSchema = new mongoose.Schema(
   {
-    taste: {
-      type: Number,
-      require: true,
-      min: 0,
-      max: 5,
-    },
-    cleanliness: {
-      type: Number,
-      required: true,
-      min: 0,
-      max: 5,
-    },
-    mood: {
-      type: Number,
-      required: true,
-      min: 0,
-      max: 5,
-    },
-    kindness: {
-      type: Number,
-      required: true,
-      min: 0,
-      max: 5,
+    name: { 
+      type: String, 
+      maxlength: 100,
+      required: true, 
     },
   },
-  schemaOptions
+  schemaOptions,
 );
-
+    
 // ReviewScaleSchema 모델 생성 및 내보내기
 const ReviewScaleModel = mongoose.model('ReviewScale', reviewScaleSchema);
 
-export default ReviewScaleModel;
+export default ReviewScaleModel

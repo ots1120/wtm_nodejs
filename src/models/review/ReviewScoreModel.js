@@ -14,14 +14,11 @@ const reviewScoreSchema = new mongoose.Schema(
       ref: 'ReviewScale',
       required: true,
     },
-    content: {
-      type: String,
-      required: true,
-      trim: true,
-    },
-    revisit: {
-      type: Boolean,
-      required: true,
+    score: { 
+      type: Number, 
+      min: 1, 
+      max: 5,
+      required: true, 
     },
   },
   schemaOptions

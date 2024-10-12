@@ -1,6 +1,6 @@
 // json related
 import jwt from 'jsonwebtoken';
-import { SECRET_KEY, EXPIRATION_DATE } from '../config';
+import { SECRET_KEY, EXPIRATION_DATE } from '../config/index.js';
 // modules
 import UserModel from '../models/user/UserModel.js';
 

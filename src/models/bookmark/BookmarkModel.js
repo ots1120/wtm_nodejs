@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import schemaOptions from '../models/common/schemaOptions';
+import schemaOptions from '../common/schemaOptions';
 
 const bookmarkSchema = new mongoose.Schema(
   {

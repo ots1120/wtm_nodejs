@@ -1,5 +1,5 @@
 import StoreModel from '../../models/store/StoreModel';
-import MenuModel from '../../models/user/menu/MenuModel';
+import MenuModel from '../../models/menu/MenuModel';
 import TicketModel from '../../models/ticket/TicketModel';
 import ReviewModel from '../../models/review/ReviewModel';
 import ReviewScaleModel from '../../models/review/ReviewScaleModel';

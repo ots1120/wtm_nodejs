@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import schemaOptions from '../../common/schemaOptions';
+import schemaOptions from '../common/schemaOptions';
 
 // 공지사항 스키마 정의
 const mealSchema = new mongoose.Schema({
