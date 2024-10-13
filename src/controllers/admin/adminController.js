@@ -8,11 +8,6 @@ import StoreModel from "../../models/store/StoreModel";
 const getDashboard = async (req, res) => {
   try {
       const storeId = req.params.storeId;
-
-      // 유효한 ObjectId인지 확인 (필요에 따라 추가)
-        if (!mongoose.Types.ObjectId.isValid(storeId)) {
-            return res.status(400).json({ error: '유효하지 않은 storeId입니다.' });
-        }
       const store = await StoreModel.findById(storeId);
 
     if (!store) {
