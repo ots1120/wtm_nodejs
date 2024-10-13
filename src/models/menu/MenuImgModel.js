@@ -17,6 +17,6 @@ const menuImgSchema = new mongoose.Schema(
   schemaOptions
 );
 
-const MenuImgModel = mongoose.model('MenuImg', menuImgSchema);
+const MenuImgModel = mongoose.model('MenuImg', menuImgSchema, 'MenuImg');
 
 export default MenuImgModel;

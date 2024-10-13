@@ -25,7 +25,8 @@ const ticketHistorySaleSchema = new mongoose.Schema(
 
 const TicketHistorySaleModel = mongoose.model(
   'TicketHistorySale',
-  ticketHistorySaleSchema
+  ticketHistorySaleSchema,
+  'TicketHistorySale'
 );
 
 export default TicketHistorySaleModel;

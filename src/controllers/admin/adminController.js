@@ -1,6 +1,37 @@
 import ReviewModel from "../../models/review/ReviewModel";
 import ReviewCommentModel from "../../models/review/ReviewCommentModel";
+import StoreModel from "../../models/store/StoreModel";
+import mongoose from "mongoose";
 
+/*
+* 관리자 대시보드 API
+*/
+const getDashboard = async (req, res) => {
+  try {
+      const storeId = req.params.storeId;
+
+      // 유효한 ObjectId인지 확인 (필요에 따라 추가)
+        if (!mongoose.Types.ObjectId.isValid(storeId)) {
+            return res.status(400).json({ error: '유효하지 않은 storeId입니다.' });
+        }
+      const store = await StoreModel.findById(storeId);
+
+      console.log(req.params);
+      console.log('storeId:', storeId)
+      console.log(store);
+      console.log('DB connection:', mongoose.connection.readyState);
+    
+
+    if (!store) {
+      return res.status(404).json({ error: 'Store를 찾을 수 없습니다.' });
+    }
+
+    res.status(200).json({ store });
+  } catch (err) {
+      console.log(err);
+    res.status(500).json({ error: '가게 정보를 불러오지 못했습니다.' });
+  }
+};
 
 
 /*
@@ -85,6 +116,7 @@ const deleteReply = async (req, res) => {
 };
 
 export {
+    getDashboard,
     getReviews,
     createReply,
     updateReply,

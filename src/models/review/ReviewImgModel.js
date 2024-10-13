@@ -17,6 +17,6 @@ const reviewImgSchema = new mongoose.Schema(
 );
 
 // Rating 모델 생성 및 내보내기
-const ReviewImgModel = mongoose.model('ReviewImg', reviewImgSchema);
+const ReviewImgModel = mongoose.model('ReviewImg', reviewImgSchema, 'ReviewImg');
 
 export default ReviewImgModel;

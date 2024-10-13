@@ -25,7 +25,8 @@ const ticketHistoryUsageSchema = new mongoose.Schema(
 
 const TicketHistoryUsageModel = mongoose.model(
   'TicketHistoryUsage',
-  ticketHistoryUsageSchema
+  ticketHistoryUsageSchema,
+  'TicketHistoryUsage'
 );
 
 export default TicketHistoryUsageModel;

@@ -1,7 +1,7 @@
 import { Router } from 'express';
 
 // controllers
-import * as reviewController from '../../controllers/admin/adminController';
+import * as adminController from '../../controllers/admin/adminController';
 
 //util
 // import { authenticateUser } from '../../utils/auth';
@@ -10,10 +10,13 @@ import * as reviewController from '../../controllers/admin/adminController';
 
 const router = Router();
 
+//대시보드 조회
+router.get('/store/:storeId', adminController.getDashboard);
+
 // 모든 가게 리뷰 조회
-router.get('/store/:storeId/reviews', reviewController.getReviews);
-router.post('/store/:storeId/reviews/:reviewId/reply', reviewController.createReply);
-router.put('/store/:storeId/reviews/:reviewId/reply/:replyId', reviewController.updateReply);
-router.delete('/store/:storeId/reviews/:reviewId/reply:replyId', reviewController.deleteReply);
+router.get('/store/:storeId/reviews', adminController.getReviews);
+router.post('/store/:storeId/reviews/:reviewId/reply', adminController.createReply);
+router.put('/store/:storeId/reviews/:reviewId/reply/:replyId', adminController.updateReply);
+router.delete('/store/:storeId/reviews/:reviewId/reply/:replyId', adminController.deleteReply);
 
 export default router;

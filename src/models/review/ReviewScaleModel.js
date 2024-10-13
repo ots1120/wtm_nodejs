@@ -16,6 +16,6 @@ const reviewScaleSchema = new mongoose.Schema(
 );
     
 // ReviewScaleSchema 모델 생성 및 내보내기
-const ReviewScaleModel = mongoose.model('ReviewScale', reviewScaleSchema);
+const ReviewScaleModel = mongoose.model('ReviewScale', reviewScaleSchema, 'ReviewScale');
 
 export default ReviewScaleModel
