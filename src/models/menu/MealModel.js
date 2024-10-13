@@ -12,6 +12,6 @@ const mealSchema = new mongoose.Schema({
   schemaOptions, // createAt, updateAt
 });
 
-const MealModel = mongoose.model('Meal', mealSchema);
+const MealModel = mongoose.model('Meal', mealSchema, 'Meal');
 
 export default MealModel;

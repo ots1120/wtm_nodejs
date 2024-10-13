@@ -21,6 +21,6 @@ const storeSnsSchema = new mongoose.Schema(
   schemaOptions
 );
 
-const StoreSnsModel = mongoose.model('StoreSns', storeSnsSchema);
+const StoreSnsModel = mongoose.model('StoreSns', storeSnsSchema, 'StoreSns');
 
 export default StoreSnsModel;

@@ -28,6 +28,6 @@ const reviewSchema = new mongoose.Schema(
 );
 
 // Review 모델 생성 및 내보내기
-const ReviewModel = mongoose.model('Review', reviewSchema);
+const ReviewModel = mongoose.model('Review', reviewSchema, 'Review');
 
 export default ReviewModel;

@@ -18,6 +18,6 @@ const reviewLikeSchema = new mongoose.Schema(
 );
 
 // Rating 모델 생성 및 내보내기
-const ReviewLikeModel = mongoose.model('ReviewLike', reviewLikeSchema);
+const ReviewLikeModel = mongoose.model('ReviewLike', reviewLikeSchema, 'ReviewLike');
 
 export default ReviewLikeModel;

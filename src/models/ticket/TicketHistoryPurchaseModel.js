@@ -25,7 +25,8 @@ const ticketHistoryPurchaseSchema = new mongoose.Schema(
 
 const TicketHistoryPurchaseModel = mongoose.model(
   'TicketHistoryPurchase',
-  ticketHistoryPurchaseSchema
+  ticketHistoryPurchaseSchema,
+  'TicketHistoryPurchase'
 );
 
 export default TicketHistoryPurchaseModel;

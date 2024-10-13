@@ -13,6 +13,6 @@ const menuCategorySchema = new mongoose.Schema(
   schemaOptions
 );
 
-const MenuCategoryModel = mongoose.model('MenuCategory', menuCategorySchema);
+const MenuCategoryModel = mongoose.model('MenuCategory', menuCategorySchema, 'MenuCategory');
 
 export default MenuCategoryModel;

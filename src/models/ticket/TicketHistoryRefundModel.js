@@ -30,7 +30,8 @@ const ticketHistoryRefundSchema = new mongoose.Schema(
 
 const TicketHistoryRefundModel = mongoose.model(
   'TicketHistoryRefund',
-  ticketHistoryRefundSchema
+  ticketHistoryRefundSchema,
+  'TicketHistoryRefund'
 );
 
 export default TicketHistoryRefundModel;

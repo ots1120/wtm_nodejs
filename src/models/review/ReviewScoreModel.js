@@ -25,6 +25,6 @@ const reviewScoreSchema = new mongoose.Schema(
 );
 
 // Review 모델 생성 및 내보내기
-const ReviewScoreModel = mongoose.model('ReviewScore', reviewScoreSchema);
+const ReviewScoreModel = mongoose.model('ReviewScore', reviewScoreSchema, 'ReviewScore');
 
 export default ReviewScoreModel;

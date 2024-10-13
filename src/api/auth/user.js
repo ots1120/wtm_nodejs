@@ -4,7 +4,7 @@ import { Router } from 'express';
 
 // modules
 // import passport from '../passport.js';
-import UserModel from '../../models/user/UserModel.js';
+import UserModel from '../../models/user/UserModel';
 
 const router = Router();
 

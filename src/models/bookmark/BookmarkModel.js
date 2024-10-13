@@ -17,6 +17,6 @@ const bookmarkSchema = new mongoose.Schema(
   schemaOptions
 );
 
-const BookmarkModel = mongoose.model('Bookmark', bookmarkSchema);
+const BookmarkModel = mongoose.model('Bookmark', bookmarkSchema, 'Bookmark');
 
 export default BookmarkModel;

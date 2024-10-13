@@ -1,7 +1,7 @@
 import bcrypt from 'bcrypt';
 import { Router } from 'express';
-import { newToken } from '../../utils/auth.js'; // newToken 함수 사용
-import UserModel from '../../models/user/UserModel.js';
+import { newToken } from '../../utils/auth'; // newToken 함수 사용
+import UserModel from '../../models/user/UserModel';
 
 const router = Router();
 

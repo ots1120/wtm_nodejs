@@ -20,6 +20,6 @@ const noticeSchema = new mongoose.Schema(
   schemaOptions
 );
 
-const NoticeModel = mongoose.model('Notice', noticeSchema);
+const NoticeModel = mongoose.model('Notice', noticeSchema, 'Notice');
 
 export default NoticeModel;
