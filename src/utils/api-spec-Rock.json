@@ -1,0 +1,597 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "WTM API 문서",
+    "description": "WTM 서비스 API 문서입니다.",
+    "version": "1.0.0"
+  },
+  "paths": {
+
+    "/stores": {
+      "get": {
+        "tags": ["/stores"],
+        "description": "모든 가게 정보를 조회하는 API입니다.",
+        "responses": {
+          "200": {
+            "description": "[완료] 모든 가게 정보를 성공적으로 조회했습니다."
+          },
+          "500": {
+            "description": "[에러] 서버 오류로 인해 가게 목록을 조회할 수 없습니다."
+          }
+        }
+      }
+    },
+    "/stores/{storeId}": {
+      "get": {
+        "tags": ["/stores"],
+        "description": "특정 가게의 정보를 조회하는 API입니다.",
+        "parameters": [
+          {
+            "name": "storeId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "가게의 고유 ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "[완료] 가게 정보를 성공적으로 조회했습니다."
+          },
+          "404": {
+            "description": "[에러] 가게를 찾을 수 없습니다."
+          },
+          "500": {
+            "description": "[에러] 서버 오류로 인해 가게 정보를 조회할 수 없습니다."
+          }
+        }
+      }
+    },
+    "/stores/{storeId}/tickets": {
+      "get": {
+        "tags": ["/stores", "/tickets"],
+        "description": "특정 가게의 식권 정보를 조회하는 API입니다.",
+        "parameters": [
+          {
+            "name": "storeId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "가게의 고유 ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "[완료] 가게의 티켓 정보가 성공적으로 조회되었습니다.",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "404": {
+            "description": "[에러] 가게에 대한 티켓 정보를 찾을 수 없습니다.",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "500": {
+            "description": "[에러] 서버 오류로 인해 티켓 정보를 조회할 수 없습니다.",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/stores/{storeId}/reviews": {
+      "post": {
+        "tags": ["/stores", "/reviews"],
+        "description": "특정 가게에 대한 리뷰를 작성하는 API입니다.",
+        "parameters": [
+          {
+            "name": "storeId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "가게의 고유 ID"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "taste": {
+                    "type": "number",
+                    "description": "맛에 대한 평점"
+                  },
+                  "cleanliness": {
+                    "type": "number",
+                    "description": "청결도에 대한 평점"
+                  },
+                  "mood": {
+                    "type": "number",
+                    "description": "분위기에 대한 평점"
+                  },
+                  "kindness": {
+                    "type": "number",
+                    "description": "친절도에 대한 평점"
+                  },
+                  "revisit": {
+                    "type": "boolean",
+                    "description": "재방문 여부"
+                  },
+                  "file": {
+                    "type": "string",
+                    "format": "binary",
+                    "description": "리뷰 이미지 파일"
+                  },
+                  "content": {
+                    "type": "string",
+                    "description": "리뷰 내용"
+                  }
+                },
+                "required": ["taste", "cleanliness", "mood", "kindness", "revisit", "content"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "[완료] 리뷰가 성공적으로 저장되었습니다.",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "404": {
+            "description": "[에러] 가게를 찾을 수 없습니다.",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "500": {
+            "description": "[에러] 서버 오류로 인해 리뷰를 저장할 수 없습니다.",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": ["/stores", "/reviews"],
+        "description": "특정 가게의 리뷰 정보를 조회하는 API입니다.",
+        "parameters": [
+          {
+            "name": "storeId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "가게의 고유 ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "[완료] 가게의 리뷰 목록과 평균 점수를 성공적으로 조회했습니다.",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "500": {
+            "description": "[에러] 서버 오류로 인해 리뷰와 평균 점수를 조회할 수 없습니다.",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/stores/{storeId}/reviews/{reviewId}": {
+      "delete": {
+        "tags": ["/stores", "/reviews"],
+        "description": "특정 가게에 대한 특정 리뷰를 삭제하는 API입니다.",
+        "parameters": [
+          {
+            "name": "storeId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "가게의 고유 ID"
+          },
+          {
+            "name": "reviewId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "리뷰의 고유 ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "[완료] 리뷰가 성공적으로 삭제되었습니다.",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "404": {
+            "description": "[에러] 리뷰를 찾을 수 없습니다.",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "500": {
+            "description": "[에러] 서버 오류로 인해 리뷰를 삭제할 수 없습니다.",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/stores/{storeId}/menus": {
+      "get": {
+        "tags": ["/stores"],
+        "description": "특정 가게의 메뉴를 조회하는 API입니다.",
+        "parameters": [
+          {
+            "name": "storeId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "가게의 고유 ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "[완료] 가게의 메뉴 정보를 성공적으로 조회했습니다.",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "404": {
+            "description": "[에러] 가게의 메뉴를 찾을 수 없습니다.",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "500": {
+            "description": "[에러] 서버 오류로 인해 메뉴 정보를 조회할 수 없습니다.",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["/stores"],
+        "description": "특정 가게에 메뉴를 등록하는 API입니다. 이미지 업로드도 지원됩니다.",
+        "parameters": [
+          {
+            "name": "storeId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "가게의 고유 ID"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "mainMenu": {
+                    "type": "string",
+                    "description": "메인 메뉴 이름"
+                  },
+                  "soupMenu": {
+                    "type": "string",
+                    "description": "국 메뉴 이름"
+                  },
+                  "etcMenus": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "기타 메뉴 이름들",
+                    "style": "form",
+                    "explode": true
+                  },
+                  "menuImages": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "format": "binary"
+                    },
+                    "description": "업로드할 메뉴 이미지 파일"
+                  }
+                },
+                "required": ["mainMenu", "soupMenu", "etcMenus"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "[완료] 메뉴가 성공적으로 등록되었습니다.",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "500": {
+            "description": "[에러] 서버 오류로 인해 메뉴를 등록할 수 없습니다.",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      },
+      
+      "delete": {
+        "tags": ["/stores"],
+        "description": "특정 가게의 오늘 메뉴를 삭제하는 API입니다.",
+        "parameters": [
+          {
+            "name": "storeId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "가게의 고유 ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "[완료] 메뉴가 성공적으로 삭제되었습니다.",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "404": {
+            "description": "[에러] 삭제할 메뉴가 없습니다.",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "500": {
+            "description": "[에러] 서버 오류로 인해 메뉴를 삭제할 수 없습니다.",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["/stores"],
+        "description": "특정 가게의 메뉴를 수정하는 API입니다.",
+        "parameters": [
+          {
+            "name": "storeId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "가게의 고유 ID"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "mainMenu": {
+                    "type": "string",
+                    "description": "메인 메뉴 이름"
+                  },
+                  "soupMenu": {
+                    "type": "string",
+                    "description": "국 메뉴 이름"
+                  },
+                  "etcMenus": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "기타 메뉴 이름들"
+                  },
+                  "price": {
+                    "type": "number",
+                    "description": "메뉴 가격"
+                  }
+                },
+                "required": ["mainMenu", "soupMenu", "etcMenus", "price"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "[완료] 메뉴가 성공적으로 수정되었습니다.",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "404": {
+            "description": "[에러] 메뉴를 찾을 수 없습니다.",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "500": {
+            "description": "[에러] 서버 오류로 인해 메뉴를 수정할 수 없습니다.",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/stores/{storeId}/notices": {
+      "get": {
+        "tags": ["/stores"],
+        "description": "특정 가게의 공지사항을 조회하는 API입니다.",
+        "parameters": [
+          {
+            "name": "storeId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "가게의 고유 ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "[완료] 공지사항이 성공적으로 조회되었습니다.",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "404": {
+            "description": "[에러] 공지사항을 찾을 수 없습니다.",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "500": {
+            "description": "[에러] 서버 오류로 인해 공지사항을 조회할 수 없습니다.",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/stores/{storeId}/reviews/{reviewId}/report/new": {
+      "post": {
+        "tags": ["/stores"],
+        "description": "특정 가게에 대한 특정 리뷰를 신고하는 API입니다.",
+        "parameters": [
+          {
+            "name": "storeId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "가게의 고유 ID"
+          },
+          {
+            "name": "reviewId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "리뷰의 고유 ID"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "reason": {
+                    "type": "string",
+                    "description": "신고 사유"
+                  },
+                  "additionalInfo": {
+                    "type": "string",
+                    "description": "추가 정보 (선택 사항)"
+                  }
+                },
+                "required": ["reason"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "[완료] 리뷰 신고가 성공적으로 접수되었습니다.",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "404": {
+            "description": "[에러] 리뷰를 찾을 수 없습니다.",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "500": {
+            "description": "[에러] 서버 오류로 인해 리뷰 신고를 접수할 수 없습니다.",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+   "/stores/{storeId}/bookmarks/{bookmarkId}": {
+        "delete": {
+          "tags": ["/stores"],
+          "description": "특정 가게의 특정 북마크를 삭제하는 API입니다.",
+          "parameters": [
+            {
+              "name": "storeId",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "description": "가게의 고유 ID"
+            },
+            {
+              "name": "bookmarkId",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "description": "북마크의 고유 ID"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "[완료] 북마크가 성공적으로 삭제되었습니다.",
+              "content": {
+                "application/json": {}
+              }
+            },
+            "404": {
+              "description": "[에러] 북마크를 찾을 수 없습니다.",
+              "content": {
+                "application/json": {}
+              }
+            },
+            "500": {
+              "description": "[에러] 서버 오류로 인해 북마크를 삭제할 수 없습니다.",
+              "content": {
+                "application/json": {}
+              }
+            }
+          }
+        }
+    }
+    }
+  }
