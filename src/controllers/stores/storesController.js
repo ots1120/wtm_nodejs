@@ -336,7 +336,7 @@ const addReview = async (req, res) => {
   try {
     const { storeId } = req.params;
     const userId = new mongoose.Types.ObjectId("670a3e34dc6751089c16a0ad"); // 고정된 userId 설정
-    const { taste, cleanliness, mood, kindness, imgs, content, revisit } = req.body;
+    const { taste, cleanliness, mood, kindness, reviewImages, content, revisit } = req.body;
 
     // revisit 값을 명시적으로 Boolean으로 변환
     const revisitBoolean = revisit === "true" || revisit === true;
@@ -378,8 +378,8 @@ const addReview = async (req, res) => {
     await Promise.all(scorePromises);
 
     // 4. 이미지 저장 (이미지가 존재할 경우)
-    if (imgs && imgs.length > 0) {
-      const imagePromises = imgs.map((imgUrl) => {
+    if (reviewImages && reviewImages.length > 0) {
+      const imagePromises = reviewImages.map((imgUrl) => {
         return new ReviewImgModel({
           reviewId: savedReview._id,
           url: imgUrl // 클라이언트가 제공한 이미지 URL 사용
