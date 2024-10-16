@@ -7,6 +7,7 @@ import MenuModel from '../../models/menu/MenuModel';
 import UserModel from '../../models/user/UserModel';
 import ReviewScoreModel from '../../models/review/ReviewScoreModel';
 import ReviewImgModel from '../../models/review/ReviewImgModel';
+import mongoose from 'mongoose';
 
 /*
  * 관리자 대시보드 API
@@ -19,21 +20,20 @@ const getDashboard = async (req, res) => {
    * 3. user.profilePicture
    */
   try {
-    const storeId = req.params.storeId;
+    const { storeId } = req.params;
     const store = await StoreModel.findById(storeId).populate(
       'adminId',
       'profilePicture'
     );
 
-    if (store) {
-      return res.status(200).json({
-        name: store.name,
-        id: store._id,
-        profilePicture: store.adminId.profilePicture,
-      });
-    } else {
+    if (!store) {
       return res.status(404).json({ error: 'Store를 찾을 수 없습니다.' });
     }
+    return res.status(200).json({
+      name: store.name,
+      id: store._id,
+      profilePicture: store.adminId.profilePicture,
+    });
   } catch (err) {
     console.log(err);
     res.status(500).json({ error: '가게 정보를 불러오지 못했습니다.' });
@@ -43,97 +43,215 @@ const getDashboard = async (req, res) => {
 /*
  * 관리자 리뷰 조회 API
  */
-// 리뷰 조회
+// 리뷰 조회 옛날버전
+// const getReviews = async (req, res) => {
+//   /**
+//    * 이거 어그리게이션 써서 리팩토링 해야 함!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+//    * 받아야 할 데이터
+//    * 1. 리뷰 작성 user.name
+//    * 2. 리뷰 작성 user.profilePhoto
+//    * 3. 리뷰 별점 reviewScore에서 reviewId로 4개 항목의 scale에 대한 점수를 구해서 합하고 평균 낸다.
+//    * 4. 리뷰 사진 reviewImage에서 reviewId로 구한다.
+//    * 5. 답글 데이터 reviewComment에서 reviewId로 구한다.
+//    */
+//   try {
+//     // 가게 ID
+//     const storeId = req.params.storeId;
+//     // 해당 가게의 리뷰 목록 가져오기
+//     const reviews = await ReviewModel.find({ storeId });
+
+//     // 각 리뷰에 대한 유저 정보, 별점, 이미지, 답글을 추가
+//     const reviewData = await Promise.all(
+//       reviews.map(async (review) => {
+//         // 1. 유저 정보 (name, profilePicture 가져옴)
+//         const user = await UserModel.findById(
+//           review.userId,
+//           'name profilePicture'
+//         );
+//         console.log(review.userId);
+
+//         // 2. 리뷰 별점 (Scale 4개 항목 합산 후 평균 계산)
+//         const reviewScores = await ReviewScoreModel.find({
+//           reviewId: review._id,
+//         });
+
+//         const totalScore = reviewScores.reduce(
+//           (acc, scoreobj) => acc + scoreobj.score,
+//           0
+//         );
+//         const averageScore =
+//           reviewScores.length > 0 ? totalScore / reviewScores.length : 0;
+
+//         // 3. 리뷰 이미지
+//         const reviewImages = await ReviewImgModel.find({
+//           reviewId: review._id,
+//         });
+
+//         // 4. 답글 데이터 가져오기
+//         const reviewComment = await ReviewCommentModel.findOne({
+//           reviewId: review._id,
+//         });
+
+//         // 5. 답글 관리자 정보 가져오기
+//         let adminInfo = null;
+//         if (reviewComment && reviewComment.userId) {
+//           adminInfo = await UserModel.findById(
+//             reviewComment.userId,
+//             'name profilePicture'
+//           );
+//           console.log(adminInfo);
+//           console.log(adminInfo.name);
+//         }
+
+//         // 리턴할 데이터 구조 생성
+//         return {
+//           user: {
+//             name: user.name,
+//             profilePicture: user.profilePicture,
+//           },
+//           review: {
+//             content: review.content, // 리뷰 내용
+//             averageScore: averageScore, // 별점 평균
+//             images: reviewImages.map((img) => img.imagePath), // 리뷰 이미지 리스트
+//           },
+//           comment: reviewComment ? reviewComment.content : null, // 답글 데이터 (없을 경우 null)
+//           admin: {
+//             name: adminInfo.name,
+//             profilePicture: adminInfo.profilePicture,
+//           },
+//         };
+//       })
+//     );
+
+//     if (!reviewData) {
+//       res
+//         .status(404)
+//         .json({ err: '리뷰 데이터를 가져오는 중 오류가 발생했습니다.' });
+//     }
+//     res.status(200).json({
+//       success: true,
+//       reviews: reviewData,
+//     });
+//   } catch (err) {
+//     console.error('리뷰 가져오기 오류:', err); // 오류 콘솔 로그 출력
+//     return res
+//       .status(500)
+//       .json({ error: '리뷰를 가져오는 중 오류가 발생했습니다.' });
+//   }
+// };
+
+// 리뷰 조회 Aggregation Ver
 const getReviews = async (req, res) => {
-  /**
-   * 이거 어그리게이션 써서 리팩토링 해야 함!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-   * 받아야 할 데이터
-   * 1. 리뷰 작성 user.name
-   * 2. 리뷰 작성 user.profilePhoto
-   * 3. 리뷰 별점 reviewScore에서 reviewId로 4개 항목의 scale에 대한 점수를 구해서 합하고 평균 낸다.
-   * 4. 리뷰 사진 reviewImage에서 reviewId로 구한다.
-   * 5. 답글 데이터 reviewComment에서 reviewId로 구한다.
-   */
   try {
-    // 가게 ID
-    const storeId = req.params.storeId;
-    // 해당 가게의 리뷰 목록 가져오기
-    const reviews = await ReviewModel.find({ storeId });
+    const { storeId } = req.params; // 가게 id 가져오기
+    const { userId } = req.body; // 로그인한 관리자 id 가져오기
 
-    // 각 리뷰에 대한 유저 정보, 별점, 이미지, 답글을 추가
-    const reviewData = await Promise.all(
-      reviews.map(async (review) => {
-        // 1. 유저 정보 (name, profilePicture 가져옴)
-        const user = await UserModel.findById(
-          review.userId,
-          'name profilePicture'
-        );
-        console.log(review.userId);
+    const objectIdStoreId = new mongoose.Types.ObjectId(storeId);
 
-        // 2. 리뷰 별점 (Scale 4개 항목 합산 후 평균 계산)
-        const reviewScores = await ReviewScoreModel.find({
-          reviewId: review._id,
-        });
-
-        const totalScore = reviewScores.reduce(
-          (acc, scoreobj) => acc + scoreobj.score,
-          0
-        );
-        const averageScore =
-          reviewScores.length > 0 ? totalScore / reviewScores.length : 0;
-
-        // 3. 리뷰 이미지
-        const reviewImages = await ReviewImgModel.find({
-          reviewId: review._id,
-        });
-
-        // 4. 답글 데이터 가져오기
-        const reviewComment = await ReviewCommentModel.findOne({
-          reviewId: review._id,
-        });
-
-        // 5. 답글 관리자 정보 가져오기
-        let adminInfo = null;
-        if (reviewComment && reviewComment.userId) {
-          adminInfo = await UserModel.findById(
-            reviewComment.userId,
-            'name profilePicture'
-          );
-          console.log(adminInfo);
-          console.log(adminInfo.name);
-        }
-
-        // 리턴할 데이터 구조 생성
-        return {
-          user: {
-            name: user.name,
-            profilePicture: user.profilePicture,
+    const reviews = await ReviewModel.aggregate([
+      // 1. ReviewModel에서 해당 store에 관련된 Review만 불러옴
+      {
+        $match: { storeId: objectIdStoreId },
+      },
+      // 2. 필터링된 리뷰에서 리뷰 작성자의 정보를 가져옴 (유저 스키마 조인)
+      {
+        $lookup: {
+          from: 'User',
+          localField: 'userId',
+          foreignField: '_id',
+          as: 'userInfo',
+        },
+      },
+      // 2-1. 배열 안에 감싸여있는 리뷰 작성자의 정보를 개별 문서로 전환
+      {
+        $unwind: '$userInfo',
+      },
+      // 3. 해당 리뷰의 별점 정보를 가져옴 (리뷰 스코어 스키마 조인)
+      {
+        $lookup: {
+          from: 'ReviewScore',
+          localField: '_id',
+          foreignField: 'reviewId',
+          as: 'reviewScores',
+        },
+      },
+      // 4. 가져온 리뷰 별점 평균 계산
+      {
+        $addFields: {
+          averageScore: {
+            $cond: {
+              if: { $gt: [{ $size: '$reviewScores' }, 0] }, // 조건문
+              then: { $avg: '$reviewScores.score' }, // 참일 경우 반환값
+              else: 0, // 거짓일 경우 반환값
+            },
           },
-          review: {
-            content: review.content, // 리뷰 내용
-            averageScore: averageScore, // 별점 평균
-            images: reviewImages.map((img) => img.imagePath), // 리뷰 이미지 리스트
-          },
-          comment: reviewComment ? reviewComment.content : null, // 답글 데이터 (없을 경우 null)
-          admin: {
-            name: adminInfo.name,
-            profilePicture: adminInfo.profilePicture,
-          },
-        };
-      })
-    );
-
-    if (!reviewData) {
-      res
-        .status(404)
-        .json({ err: '리뷰 데이터를 가져오는 중 오류가 발생했습니다.' });
+        },
+      },
+      // 5. 해당 리뷰의 이미지를 가져옴 (리뷰 이미지 스키마 조인)
+      {
+        $lookup: {
+          from: 'ReviewImg',
+          localField: '_id',
+          foreignField: 'reviewId',
+          as: 'reviewImages',
+        },
+      },
+      // 6. 해당 리뷰의 관리자 코멘트를 가져옴 (리뷰 코멘트 스키마 조인)
+      {
+        $lookup: {
+          from: 'ReviewComment',
+          localField: '_id',
+          foreignField: 'reviewId',
+          as: 'reviewComment',
+        },
+      },
+      {
+        $unwind: {
+          path: '$reviewComment',
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      //7. 해당 리뷰의 관리자 코멘트 작성자를 가져옴 (유저 스키마 조인)
+      {
+        $lookup: {
+          from: 'User',
+          localField: 'reviewComment.userId',
+          foreignField: '_id',
+          as: 'adminInfo',
+        },
+      },
+      {
+        $unwind: {
+          path: '$adminInfo',
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      // 8. 최종 데이터 포맷
+      {
+        $project: {
+          _id: 0,
+          'user.name': 'userInfo.name',
+          'user.profilePicture': 'userInfo.profilePicture',
+          'review.content': 1,
+          'review.averageScore': '$averageScore',
+          'review.images': '$reviewImages.url',
+          comment: '$reviewComment.content',
+          'admin.name': '$adminInfo.name',
+          'admin.profilePicture': '$adminInfo.profilePicture',
+        },
+      },
+    ]);
+    if (!reviews || reviews.length === 0) {
+      console.log(reviews);
+      return res.status(404).json({ error: '리뷰 데이터를 찾을 수 없습니다.' });
     }
+
     res.status(200).json({
       success: true,
-      reviews: reviewData,
+      reviews,
     });
   } catch (err) {
-    console.error('리뷰 가져오기 오류:', err); // 오류 콘솔 로그 출력
+    console.error('리뷰 가져오기 오류:', err);
     return res
       .status(500)
       .json({ error: '리뷰를 가져오는 중 오류가 발생했습니다.' });
@@ -404,13 +522,27 @@ const deleteNotices = async (req, res) => {
 const getMyStoreInfo = async (req, res) => {
   try {
     const { storeId } = req.params;
+    const userId = req.body.userId; // jwt 미들웨어 적용시 req.userId 로 변경.
 
-    const myStoreInfo = StoreModel.findById(storeId);
+    // 현재 프로필 사진 출력을 위한 user_profilePicture 전달.
+    const user = await UserModel.findById(userId, 'profilePicture');
+    console.log(user);
+
+    if (!user) {
+      return res.status(404).json({ err: '유저 정보가 없습니다.' });
+    }
+
+    // 식당 정보 조회를 위한 store 정보 전달.
+    const myStoreInfo = await StoreModel.findById(storeId);
+    console.log(myStoreInfo);
 
     if (!myStoreInfo) {
       return res.status(404).json({ err: '가게 정보가 없습니다.' });
     }
-    return res.status(200).json(myStoreInfo);
+    return res.status(200).json({
+      store: myStoreInfo,
+      user: user,
+    });
   } catch (err) {
     return res
       .status(500)
@@ -422,20 +554,48 @@ const getMyStoreInfo = async (req, res) => {
 const updateMyStoreInfo = async (req, res) => {
   try {
     const { storeId } = req.params;
-    const { name, address, contact, adminId, openTime, closeTime } = req.body;
+    // 추후 userId는 req.userId로 가져옴 (JWT 미들웨어 이용)
+    const {
+      name,
+      address,
+      contact,
+      openTime,
+      closeTime,
+      profilePicture,
+      email,
+      password,
+      userId,
+    } = req.body;
 
-    const updatedMyStoreInfo = StoreModel.findByIdAndUpdate(
+    // 프로필 사진 업데이트를 위한 User 모델
+    const updatedUserInfo = await UserModel.findByIdAndUpdate(
+      userId,
+      { profilePicture, email, password },
+      { new: true }
+    );
+
+    if (!updatedUserInfo) {
+      return res
+        .status(404)
+        .json({ err: '프로필 사진 수정 데이터에 오류가 발생했습니다.' });
+    }
+
+    // 가게 정보 수정을 위한 Store 모델
+    const updatedMyStoreInfo = await StoreModel.findByIdAndUpdate(
       storeId,
-      { name, address, contact, adminId, openTime, closeTime },
+      { name, address, contact, openTime, closeTime },
       { new: true }
     );
 
     if (!updatedMyStoreInfo) {
       return res
         .status(404)
-        .json({ err: '수정할 데이터에 오류가 발생했습니다.' });
+        .json({ err: '가게 정보 수정 데이터에 오류가 발생했습니다.' });
     }
-    return res.status(200).json(updatedMyStoreInfo);
+    return res.status(200).json({
+      store: updatedMyStoreInfo,
+      user: updatedUserInfo,
+    });
   } catch (error) {
     return res
       .status(500)
@@ -448,6 +608,10 @@ const updateMyStoreInfo = async (req, res) => {
  */
 
 // 식권 조회
+/**
+ * 보내야 할 데이터
+ * 1. 현재 월
+ */
 const getTickets = async (req, res) => {
   try {
     const { storeId } = req.params;
