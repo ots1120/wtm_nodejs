@@ -1,3 +1,6 @@
-* text=lf
+# git config --global core.autocrlf false
+
+* text eol=lf
 *.sh text eol=lf
 *.bat text eol=crlf
+
