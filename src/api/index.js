@@ -6,6 +6,7 @@ import storesRouter from './stores/stores'; // /stores 라우터 가져오기
 import loginRouter from './auth/login';
 import userRouter from './auth/user';
 import adminRouter from './admin/admin';
+import myRouter from "./my/my";
 
 const router = Router();
 
@@ -14,6 +15,7 @@ router.use('/stores', storesRouter); // 식당 정보 관련 API를 정의한 �
 router.use('/login', loginRouter); // 로그인 관련 API를 정의한 라우터 모듈
 router.use('/user', userRouter); // 사용자 관련 API를 정의한 라우터 모듈
 router.use('/admin', adminRouter); // 관리자 관련 API를 정의한 라우터 모듈
+router.use("/my", myRouter); // 사용자 편의 성 기능 관련 API를 정의한 라우터 모듈
 
 
 export default router;
