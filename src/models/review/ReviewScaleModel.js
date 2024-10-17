@@ -6,16 +6,20 @@ import schemaOptions from '../common/schemaOptions';
  */
 const reviewScaleSchema = new mongoose.Schema(
   {
-    name: { 
-      type: String, 
+    name: {
+      type: String,
       maxlength: 100,
-      required: true, 
+      required: true,
     },
   },
-  schemaOptions,
+  schemaOptions
 );
-    
-// ReviewScaleSchema 모델 생성 및 내보내기
-const ReviewScaleModel = mongoose.model('ReviewScale', reviewScaleSchema, 'ReviewScale');
 
-export default ReviewScaleModel
+// ReviewScaleSchema 모델 생성 및 내보내기
+const ReviewScaleModel = mongoose.model(
+  'ReviewScale',
+  reviewScaleSchema,
+  'ReviewScale'
+);
+
+export default ReviewScaleModel;

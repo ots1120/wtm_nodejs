@@ -6,7 +6,7 @@ import UserModel from '../models/user/UserModel.js';
 
 export const newToken = (user) => {
   const payload = {
-    username: user.username,
+    email: user.email,
     _id: user._id,
   };
   return jwt.sign(payload, SECRET_KEY, {
@@ -48,3 +48,4 @@ export const authenticateUser = async (req, res, next) => {
   req.user = user;
   next();
 };
+
