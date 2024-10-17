@@ -1,4 +1,5 @@
 import multer from 'multer';
+import path from 'path';
 
 // multer 설정 (이미지 업로드)
 const menuImgStorage = multer.diskStorage({

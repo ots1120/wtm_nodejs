@@ -14,17 +14,21 @@ const reviewScoreSchema = new mongoose.Schema(
       ref: 'ReviewScale',
       required: true,
     },
-    score: { 
-      type: Number, 
-      min: 1, 
+    score: {
+      type: Number,
+      min: 1,
       max: 5,
-      required: true, 
+      required: true,
     },
   },
   schemaOptions
 );
 
 // Review 모델 생성 및 내보내기
-const ReviewScoreModel = mongoose.model('ReviewScore', reviewScoreSchema, 'ReviewScore');
+const ReviewScoreModel = mongoose.model(
+  'ReviewScore',
+  reviewScoreSchema,
+  'ReviewScore'
+);
 
 export default ReviewScoreModel;
