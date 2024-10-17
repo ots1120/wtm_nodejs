@@ -305,7 +305,7 @@ const getNotices = async (req, res) => {
           name: user.name,
           profilePicture: user.profilePicture,
         },
-        notices: notices.map((notice) => ({
+        notices: notices.map(notice => ({
           title: notice.title,
           content: notice.content,
           createdTime: notice.createdTime,
@@ -513,7 +513,6 @@ const updateMyStoreInfo = async (req, res) => {
 const getTickets = async (req, res) => {
   /**
    * 보내야 할 데이터
-   * 1. 현재 월
    */
   try {
     const { storeId } = req.params;

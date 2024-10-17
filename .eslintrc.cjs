@@ -1,6 +1,7 @@
 module.exports = {
   root: true,
   env: {
+    es6: true,
     node: true,
   },
   extends: [
@@ -15,6 +16,7 @@ module.exports = {
     requireConfigFile: false, // 개별 Babel 설정 파일 없이도 작동하도록 설정
   },
   rules: {
+    'no-unused-vars': ['error', { args: 'none' }],
     'import/prefer-default-export': 'off',
     'linebreak-style': 0, // 운영체제마다 개행차이로 생기는 오류
     'no-console': 'off',

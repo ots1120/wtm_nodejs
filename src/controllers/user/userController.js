@@ -1,9 +1,10 @@
 import UserModel from '../../models/user/UserModel';
 import bcrypt from 'bcrypt';
 
-export const createUser = async (req, res, next) => {
+export const createUser = async (req, res) => {
   try {
-    const { email, password, name, role, address, phone, profilePicture } = req.body;
+    const { email, password, name, role, address, phone, profilePicture } =
+      req.body;
 
     // 1. 사용자 중복 확인
     const existingUser = await UserModel.findOne({ email });
@@ -44,8 +45,9 @@ export const createUser = async (req, res, next) => {
     // 5. 에러 처리
     console.log('회원가입 중 에러 발생:', error);
     return res.status(500).json({
-      message: '회원가입 중 서버 에러가 발생했습니다. 잠시 후 다시 시도해 주세요.',
+      message:
+        '회원가입 중 서버 에러가 발생했습니다. 잠시 후 다시 시도해 주세요.',
       error: error.message,
     });
   }
-}
+};

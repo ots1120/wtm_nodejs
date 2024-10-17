@@ -1,6 +1,6 @@
 // libs
 import { Router } from 'express';
-import * as userController from '../../controllers/user/userController'
+import * as userController from '../../controllers/user/userController';
 
 // modules
 // import passport from '../passport.js';
@@ -8,6 +8,6 @@ import * as userController from '../../controllers/user/userController'
 const router = Router();
 
 // 회원가입 API
-router.post('/signup', userController.createUser)
+router.post('/signup', userController.createUser);
 
 export default router;

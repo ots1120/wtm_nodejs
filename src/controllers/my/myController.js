@@ -1,12 +1,12 @@
-import UserModel from "../../models/user/UserModel";
-import TicketModel from "../../models/ticket/TicketModel";
-import StoreModel from "../../models/store/StoreModel";
-import ReviewModel from "../../models/review/ReviewModel";
-import TicketHistoryPurchaseModel from "../../models/ticket/TicketHistoryPurchaseModel";
-import TicketHistoryUsageModel from "../../models/ticket/TicketHistoryUsageModel";
-import BookmarkModel from "../../models/bookmark/BookmarkModel";
-import ReviewScoreModel from "../../models/review/ReviewScoreModel";
-import mongoose from "mongoose";
+import UserModel from '../../models/user/UserModel';
+import TicketModel from '../../models/ticket/TicketModel';
+import StoreModel from '../../models/store/StoreModel';
+import ReviewModel from '../../models/review/ReviewModel';
+import TicketHistoryPurchaseModel from '../../models/ticket/TicketHistoryPurchaseModel';
+import TicketHistoryUsageModel from '../../models/ticket/TicketHistoryUsageModel';
+import BookmarkModel from '../../models/bookmark/BookmarkModel';
+import ReviewScoreModel from '../../models/review/ReviewScoreModel';
+import mongoose from 'mongoose';
 
 // 사용자 전용 메인 페이지
 const getMypage = async (req, res) => {
@@ -18,7 +18,7 @@ const getMypage = async (req, res) => {
     res.json(user);
   } catch (error) {
     res.status(500).json({
-      message: "설정 업데이트 중 오류가 발생했습니다.",
+      message: '설정 업데이트 중 오류가 발생했습니다.',
       error: error.message,
     });
   }
@@ -34,7 +34,7 @@ const getMySettings = async (req, res) => {
     res.json(user);
   } catch (error) {
     res.status(500).json({
-      message: "설정 업데이트 중 오류가 발생했습니다.",
+      message: '설정 업데이트 중 오류가 발생했습니다.',
       error: error.message,
     });
   }
@@ -55,13 +55,13 @@ const updateMySettings = async (req, res) => {
     );
 
     res.json({
-      message: "사용자 정보가 성공적으로 업데이트되었습니다.",
+      message: '사용자 정보가 성공적으로 업데이트되었습니다.',
       user: updatedUser,
     });
   } catch (error) {
-    console.error("Error during updating user settings:", error);
+    console.error('Error during updating user settings:', error);
     res.status(500).json({
-      message: "정보 업데이트 중 오류가 발생했습니다.",
+      message: '정보 업데이트 중 오류가 발생했습니다.',
       error: error.message,
     });
   }
@@ -77,7 +77,7 @@ const getTicketsOwnedByUser = async (req, res) => {
     const purchasedTickets = await TicketHistoryPurchaseModel.find({
       userId,
     })
-      .populate("ticketId")
+      .populate('ticketId')
       .exec();
 
     // Step 2: 사용 스키마에서 해당 사용자의 ticketId와 storeId를 조회
@@ -86,7 +86,7 @@ const getTicketsOwnedByUser = async (req, res) => {
     const ticketMap = {};
 
     // 구입한 티켓들을 ticketId 기준으로 그룹화
-    purchasedTickets.forEach((purchasedTicket) => {
+    purchasedTickets.forEach(purchasedTicket => {
       const ticketId = String(purchasedTicket.ticketId._id);
       if (!ticketMap[ticketId]) {
         ticketMap[ticketId] = {
@@ -99,7 +99,7 @@ const getTicketsOwnedByUser = async (req, res) => {
     });
 
     // 사용한 티켓들을 ticketId 기준으로 그룹화하여 더함
-    usedTickets.forEach((usedTicket) => {
+    usedTickets.forEach(usedTicket => {
       const ticketId = String(usedTicket.ticketId._id);
       if (ticketMap[ticketId]) {
         ticketMap[ticketId].totalUsedTickets += usedTicket.amount;
@@ -135,17 +135,17 @@ const getTicketsOwnedByUser = async (req, res) => {
       },
       {
         $lookup: {
-          from: "ReviewScore",
-          localField: "_id",
-          foreignField: "reviewId",
-          as: "scores",
+          from: 'ReviewScore',
+          localField: '_id',
+          foreignField: 'reviewId',
+          as: 'scores',
         },
       },
-      { $unwind: "$scores" },
+      { $unwind: '$scores' },
       {
         $group: {
-          _id: "$storeId",
-          totalScore: { $sum: "$scores.score" },
+          _id: '$storeId',
+          totalScore: { $sum: '$scores.score' },
           count: { $sum: 1 },
         },
       },
@@ -153,8 +153,8 @@ const getTicketsOwnedByUser = async (req, res) => {
         $addFields: {
           averageScore: {
             $cond: {
-              if: { $gt: ["$count", 0] },
-              then: { $divide: ["$totalScore", "$count"] },
+              if: { $gt: ['$count', 0] },
+              then: { $divide: ['$totalScore', '$count'] },
               else: 0,
             },
           },
@@ -168,18 +168,18 @@ const getTicketsOwnedByUser = async (req, res) => {
 
     // Step 7: 리뷰 평균 점수를 storeId별로 매핑
     const reviewMap = {};
-    reviewResults.forEach((review) => {
+    reviewResults.forEach(review => {
       reviewMap[review._id] = review.averageScore;
     });
 
     // Step 8: store 정보를 storeId로 매핑
     const storeMap = {};
-    stores.forEach((store) => {
+    stores.forEach(store => {
       storeMap[String(store._id)] = store;
     });
 
     // Step 9: 리뷰 점수와 store 정보를 ticketListInfo에 추가
-    const finalResult = ticketListInfo.map((ticketInfo) => {
+    const finalResult = ticketListInfo.map(ticketInfo => {
       const store = storeMap[ticketInfo.storeId];
       return {
         ...ticketInfo,
@@ -192,14 +192,14 @@ const getTicketsOwnedByUser = async (req, res) => {
     res.json(finalResult);
   } catch (error) {
     res.status(500).json({
-      message: "티켓 정보를 불러오는 중 오류가 발생했습니다.",
+      message: '티켓 정보를 불러오는 중 오류가 발생했습니다.',
       error: error.message,
     });
   }
 };
 
 // 티켓 사용
-const useMyTicket = async (req, res) => {
+const useMyTicket = async (req, res, next) => {
   try {
     const { userId, ticketId, amount } = req.body;
     const ticketUsage = new TicketHistoryUsageModel({
@@ -208,12 +208,14 @@ const useMyTicket = async (req, res) => {
       amount: amount,
     });
     await ticketUsage.save();
-    res.json({ message: "데이터를 저장 중입니다" });
-  } catch (error) {}
+    res.json({ message: '데이터를 저장 중입니다' });
+  } catch (error) {
+    next(error);
+  }
 };
 
 //티켓 충전
-const purchaseMyTicket = async (req, res) => {
+const purchaseMyTicket = async (req, res, next) => {
   try {
     const { userId, ticketId } = req.body;
     const { amount } = req.body;
@@ -226,8 +228,10 @@ const purchaseMyTicket = async (req, res) => {
 
     await ticketPurchase.save();
 
-    res.json({ message: "메시지 잘 보냇쇼잉 확인해보쇼" });
-  } catch (error) {}
+    res.json({ message: '메시지 잘 보냇쇼잉 확인해보쇼' });
+  } catch (error) {
+    next(error);
+  }
 };
 
 // 티켓 사용 내역 조회
@@ -263,7 +267,7 @@ const getMyTicketHistory = async (req, res) => {
   } catch (error) {
     res
       .status(500)
-      .json({ message: "티켓 내역을 불러오는 중 오류가 발생했습니다." });
+      .json({ message: '티켓 내역을 불러오는 중 오류가 발생했습니다.' });
   }
 };
 
@@ -274,11 +278,11 @@ const getMyReviews = async (req, res) => {
 
     // 1. userId로 review와 해당하는 가게 정보 가져옴.
     // 가게 이미지는 쿼리 한번더 진행하는 것이 필요할 것으로 예상 - promise.all에서 처리하는게 좋아보임.
-    const reviews = await ReviewModel.find({ userId }).populate("storeId");
+    const reviews = await ReviewModel.find({ userId }).populate('storeId');
 
     // 2. 모든 리뷰의 평균 점수를 계산
     const reviewsWithAverageScore = await Promise.all(
-      reviews.map(async (review) => {
+      reviews.map(async review => {
         // 3. 각 review의 _id로 reviewScore를 가져옴
         const reviewScoreList = await ReviewScoreModel.find({
           reviewId: review._id,
@@ -305,7 +309,7 @@ const getMyReviews = async (req, res) => {
   } catch (error) {
     res
       .status(500)
-      .json({ message: "리뷰 데이터를 불러오는 중 오류가 발생했습니다." });
+      .json({ message: '리뷰 데이터를 불러오는 중 오류가 발생했습니다.' });
   }
 };
 
@@ -315,11 +319,11 @@ const getMyBookmarks = async (req, res) => {
     const { userId } = req.params;
 
     // 1. userId로 북마크를 가져오며 storeId도 populate
-    const bookmarks = await BookmarkModel.find({ userId }).populate("storeId");
+    const bookmarks = await BookmarkModel.find({ userId }).populate('storeId');
 
     // 2. 리뷰와 스코어들을 한 번에 처리하는 로직 (Aggregate로 변경)
     const bookmarksWithAverageScores = await Promise.all(
-      bookmarks.map(async (bookmark) => {
+      bookmarks.map(async bookmark => {
         // 3. storeId로 해당하는 리뷰들의 평균 점수를 aggregate로 계산
         const result = await ReviewModel.aggregate([
           {
@@ -327,19 +331,19 @@ const getMyBookmarks = async (req, res) => {
           },
           {
             $lookup: {
-              from: "ReviewScore", // reviewScores 컬렉션과 조인
-              localField: "_id",
-              foreignField: "reviewId",
-              as: "scores",
+              from: 'ReviewScore', // reviewScores 컬렉션과 조인
+              localField: '_id',
+              foreignField: 'reviewId',
+              as: 'scores',
             },
           },
           {
-            $unwind: "$scores", // 스코어들을 배열이 아닌 개별 도큐먼트로 풀어줌
+            $unwind: '$scores', // 스코어들을 배열이 아닌 개별 도큐먼트로 풀어줌
           },
           {
             $group: {
-              _id: "$storeId", // storeId별로 그룹화
-              totalScore: { $sum: "$scores.score" }, // 스코어들의 합 계산
+              _id: '$storeId', // storeId별로 그룹화
+              totalScore: { $sum: '$scores.score' }, // 스코어들의 합 계산
               count: { $sum: 1 }, // 스코어의 개수를 셈
             },
           },
@@ -347,8 +351,8 @@ const getMyBookmarks = async (req, res) => {
             $addFields: {
               averageScore: {
                 $cond: {
-                  if: { $gt: ["$count", 0] }, // 리뷰가 하나라도 있을 경우
-                  then: { $divide: ["$totalScore", "$count"] }, // 평균 계산 (row 개수만큼 나눔)
+                  if: { $gt: ['$count', 0] }, // 리뷰가 하나라도 있을 경우
+                  then: { $divide: ['$totalScore', '$count'] }, // 평균 계산 (row 개수만큼 나눔)
                   else: 0, // 없으면 0
                 },
               },
@@ -372,7 +376,7 @@ const getMyBookmarks = async (req, res) => {
   } catch (error) {
     res
       .status(500)
-      .json({ message: "북마크 데이터를 불러오는 중 오류가 발생했습니다." });
+      .json({ message: '북마크 데이터를 불러오는 중 오류가 발생했습니다.' });
   }
 };
 
@@ -389,16 +393,16 @@ const deleteMyReview = async (req, res) => {
 
     if (!deleteReview) {
       return res.status(404).json({
-        message: "해당 사용자의 리뷰를 삭제하지 못하였습니다.",
+        message: '해당 사용자의 리뷰를 삭제하지 못하였습니다.',
       });
     }
 
     res.status(200).json({
-      message: "해당 리뷰가 정상적으로 삭제되었습니다",
+      message: '해당 리뷰가 정상적으로 삭제되었습니다',
     });
   } catch {
     res.status(500).json({
-      message: "리뷰 삭제 중 오류가 발생하였습니다.",
+      message: '리뷰 삭제 중 오류가 발생하였습니다.',
     });
   }
 };
@@ -427,9 +431,9 @@ const getMyTicketHistoryByStore = async (req, res) => {
     if (!tickets || tickets.length === 0) {
       return res
         .status(404)
-        .json({ error: "해당 가게에 대한 티켓이 없습니다." });
+        .json({ error: '해당 가게에 대한 티켓이 없습니다.' });
     }
-    const ticketIds = tickets.map((ticket) => ticket._id); // storeId에 해당하는 모든 ticketId 추출
+    const ticketIds = tickets.map(ticket => ticket._id); // storeId에 해당하는 모든 ticketId 추출
 
     // Step 2: 찾은 ticketId로 purchase 데이터 조회
     const purchaseHistory = await TicketHistoryPurchaseModel.find({
@@ -459,10 +463,10 @@ const getMyTicketHistoryByStore = async (req, res) => {
     // Step 5: 정렬된 데이터 반환
     res.json(combinedHistory);
   } catch (error) {
-    console.error("Error during aggregation:", error);
+    console.error('Error during aggregation:', error);
     res
       .status(500)
-      .json({ error: "티켓 내역을 불러오는 중 오류가 발생했습니다." });
+      .json({ error: '티켓 내역을 불러오는 중 오류가 발생했습니다.' });
   }
 };
 

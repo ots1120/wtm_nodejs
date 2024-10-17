@@ -8,8 +8,8 @@ import chalk from 'chalk'; // 콘솔에 출력되는 텍스트에 색상을 적�
 import connectDB from './config/db.js'; // db.js 파일에 정의된 MongoDB 데이터베이스 연결 함수
 
 // API, Router 설정
-import routes from "./api/index.js";
-import docs from "./utils/api-doc.js"; // Swagger 문서화 설정을 정의한 API 문서화 모듈
+import routes from './api/index.js';
+import docs from './utils/api-doc.js'; // Swagger 문서화 설정을 정의한 API 문서화 모듈
 
 // MongoDB 연결
 connectDB(); // MogoDB와의 연결하는 데이터베이스 연결 함수
@@ -27,6 +27,7 @@ app.use(cors()); // Vue.js와 같은 다른 도메인에서 API 호출을 위한
 // app.use(bodyParser.urlencoded({ extended: true })); // application/x-www-form-urlencoded 타입의 요청 데이터를 파싱.
 // app.use(bodyParser.json()); //application/json 타입의 요청 데이터를 파싱.
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(morgan('dev')); // 개발환경을 위해 dev 모드로 HTTP 요청 로그 출력
 
 // router 미들웨어 설정
@@ -43,7 +44,7 @@ app.use((error, req, res, next) => {
 // start
 app.listen(port, () =>
   console.log(
-    `${chalk.white.bgHex("#41b883").bold(`WTM SERVER IS RUNNING ON ${port}`)}`
+    `${chalk.white.bgHex('#41b883').bold(`WTM SERVER IS RUNNING ON ${port}`)}`
   )
 );
 

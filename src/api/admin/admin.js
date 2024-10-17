@@ -11,10 +11,10 @@ import * as adminController from '../../controllers/admin/adminController';
 const router = Router();
 
 //대시보드 조회
-router.get('/store/:storeId', adminController.getDashboard);
+router.get('/stores/:storeId', adminController.getDashboard);
 
 // 모든 가게 리뷰 조회
-router.get('/store/:storeId/reviews', adminController.getReviews);
+router.get('/stores/:storeId/reviews', adminController.getReviews);
 router.post(
   '/store/:storeId/reviews/:reviewId/comments',
   adminController.createComment
@@ -36,7 +36,7 @@ router.post('/store/:storeId/notices', adminController.createNotices);
 router.get('/store/:storeId/notices/:noticeId', adminController.getNoticeById);
 router.put('/store/:storeId/notices/:noticeId', adminController.updateNotices);
 router.delete(
-  '/store/:storeId/notices/:noticeId',
+  '/stores/:storeId/notices/:noticeId',
   adminController.deleteNotices
 );
 

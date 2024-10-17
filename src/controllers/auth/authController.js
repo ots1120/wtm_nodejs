@@ -34,7 +34,8 @@ export const login = async (req, res) => {
     // 5. 서버 에러 처리
     console.error('로그인 중 오류 발생:', error);
     return res.status(500).json({
-      message: '로그인 중 서버 에러가 발생했습니다. 잠시 후 다시 시도해 주세요.',
+      message:
+        '로그인 중 서버 에러가 발생했습니다. 잠시 후 다시 시도해 주세요.',
     });
   }
 };

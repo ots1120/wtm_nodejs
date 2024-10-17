@@ -11,7 +11,7 @@ const mealSchema = new mongoose.Schema(
       default: () => new Date().toISOString().split('T')[0],
     },
   },
-  schemaOptions, // createAt, updateAt
+  schemaOptions // createAt, updateAt
 );
 
 const MealModel = mongoose.model('Meal', mealSchema, 'Meal');

@@ -4,7 +4,7 @@ import { SECRET_KEY, EXPIRATION_DATE } from '../config/index.js';
 // modules
 import UserModel from '../models/user/UserModel.js';
 
-export const newToken = (user) => {
+export const newToken = user => {
   const payload = {
     email: user.email,
     _id: user._id,
@@ -14,7 +14,7 @@ export const newToken = (user) => {
   });
 };
 
-export const verifyToken = (token) =>
+export const verifyToken = token =>
   new Promise((resolve, reject) => {
     jwt.verify(token, SECRET_KEY, (err, payload) => {
       if (err) return reject(err);
@@ -48,4 +48,3 @@ export const authenticateUser = async (req, res, next) => {
   req.user = user;
   next();
 };
-
