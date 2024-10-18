@@ -2,6 +2,8 @@
  * 메인 라우터 파일 : 모든 라우터 통합하고, app.js에서 사용함
  */
 import { Router } from 'express';
+import swaggerUi from 'swagger-ui-express';
+import apiSpec from '../utils/api-doc';
 import storesRouter from './stores/stores'; // /stores 라우터 가져오기
 import loginRouter from './auth/login';
 import userRouter from './auth/user';
@@ -9,6 +11,9 @@ import adminRouter from './admin/admin';
 import myRouter from './my/my';
 
 const router = Router();
+
+// swagger API
+router.use('/api', swaggerUi.serve, swaggerUi.setup(apiSpec));
 
 // API 경로 연결
 router.use('/stores', storesRouter); // 식당 정보 관련 API를 정의한 라우터 모듈

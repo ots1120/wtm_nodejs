@@ -9,7 +9,6 @@ import connectDB from './config/db.js'; // db.js 파일에 정의된 MongoDB 데
 
 // API, Router 설정
 import routes from './api/index.js';
-import docs from './utils/api-doc.js'; // Swagger 문서화 설정을 정의한 API 문서화 모듈
 
 // MongoDB 연결
 connectDB(); // MogoDB와의 연결하는 데이터베이스 연결 함수
@@ -32,9 +31,6 @@ app.use(morgan('dev')); // 개발환경을 위해 dev 모드로 HTTP 요청 로�
 
 // router 미들웨어 설정
 app.use(routes);
-
-//swagger api docs
-app.use(docs);
 
 // express 비동기 에러 처리를 위한 default error handler 미들웨어 (반드시 미들웨어의 가장 마지막에 위치해야함)
 app.use((error, req, res, next) => {

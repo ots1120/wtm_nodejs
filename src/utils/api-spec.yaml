@@ -4,30 +4,40 @@ info:
   description: ''
   version: 1.0.0
 paths:
-  /signup:
+  /user/signup:
     post:
       tags:
-        - /signup
-      description: 회원 가입을 위한 API 입니다. 사용자 아이디, 암호, 닉네임 3개를 입력해야 합니다.
+        - /user
+      description: 회원 가입을 위한 API 입니다. 사용자 이메일, 암호, 닉네임 3개를 입력해야 합니다.
       requestBody:
         content:
-          application/x-www-form-urlencoded:
+          application/json:
             schema:
               type: object
               properties:
-                username:
+                email:
                   type: string
-                  description: 사용자 아이디
+                  description: 사용자 이메일 (필수)
                 password:
                   type: string
-                  description: 비밀번호
-                nickname:
+                  description: 비밀번호 (필수, 최소 8자 이상)
+                name:
                   type: string
-                  description: 닉네임
+                  description: 사용자 닉네임 (필수, 유일)
+                address:
+                  type: string
+                  description: 주소 (필수)
+                phone:
+                  type: string
+                  description: 연락처 (선택)
+                role:
+                  type: string
+                  description: 사용자 역할
               required:
-                - username
+                - email
                 - password
-                - nickname
+                - name
+                - address
       responses:
         '200':
           description: '[완료]가입이 정상적으로 완료되었습니다.'
@@ -45,21 +55,21 @@ paths:
     post:
       tags:
         - /login
-      description: 로그인하는 API 입니다. 사용자 아이디와 암호를 입력해야 합니다.
+      description: 로그인하는 API 입니다. 사용자 이메일 아이디와 암호를 입력해야 합니다.
       requestBody:
         content:
-          application/x-www-form-urlencoded:
+          application/json:
             schema:
               type: object
               properties:
-                username:
+                email:
                   type: string
-                  description: 사용자 아이디
+                  description: 사용자 이메일
                 password:
                   type: string
                   description: 비밀번호
               required:
-                - username
+                - email
                 - password
       responses:
         '200':
@@ -830,7 +840,7 @@ paths:
   /stores:
     get:
       tags:
-        - Stores
+        - /stores
       description: 모든 가게 정보를 조회하는 API입니다.
       security:
         - bearerAuth: []
@@ -858,7 +868,7 @@ paths:
   /stores/{storeId}:
     get:
       tags:
-        - Stores
+        - /stores
       description: 특정 가게의 정보를 조회하는 API입니다.
       parameters:
         - name: storeId
@@ -901,7 +911,7 @@ paths:
   /stores/{storeId}/menus:
     get:
       tags:
-        - Stores
+        - /stores
       description: 특정 가게의 오늘 메뉴를 조회하는 API입니다.
       parameters:
         - name: storeId
@@ -949,7 +959,7 @@ paths:
                 error: 메뉴 정보를 조회하는 중 오류가 발생했습니다.
     post:
       tags:
-        - Stores
+        - /stores
       description: 특정 가게에 메뉴를 등록하는 API입니다. 이미지 업로드도 지원됩니다.
       parameters:
         - name: storeId
@@ -1002,7 +1012,7 @@ paths:
                 error: 메뉴 등록 중 오류가 발생했습니다.
     delete:
       tags:
-        - Stores
+        - /stores
       description: 특정 가게의 오늘 메뉴를 삭제하는 API입니다.
       parameters:
         - name: storeId
@@ -1035,7 +1045,7 @@ paths:
   /stores/{storeId}/tickets:
     get:
       tags:
-        - Stores
+        - /stores
       description: 특정 가게의 티켓 정보를 조회하는 API입니다.
       parameters:
         - name: storeId
@@ -1069,7 +1079,7 @@ paths:
   /stores/{storeId}/reviews:
     post:
       tags:
-        - Stores
+        - /stores
       description: 특정 가게에 대한 리뷰를 작성하는 API입니다.
       parameters:
         - name: storeId
@@ -1146,7 +1156,7 @@ paths:
                 error: 리뷰 등록 중 오류가 발생했습니다.
     get:
       tags:
-        - Stores
+        - /stores
       description: 특정 가게의 리뷰 정보를 조회하는 API입니다.
       parameters:
         - name: storeId
@@ -1195,7 +1205,7 @@ paths:
   /stores/{storeId}/notices:
     get:
       tags:
-        - Stores
+        - /stores
       description: 특정 가게의 공지사항을 조회하는 API입니다.
       parameters:
         - name: storeId
@@ -1655,31 +1665,22 @@ components:
         _id:
           type: string
           format: int64
-        username:
+        email:
           type: string
           description: User's name
         password:
           type: string
           description: User's password
-        nickname:
+        name:
           type: string
           description: User's nickname
         createdAt:
           type: string
           format: date-time
-    Posts:
-      type: object
-      properties:
-        _id:
-          type: string
-        title:
-          type: string
-        contents:
-          type: string
   securitySchemes:
     bearerAuth:
       type: http
       scheme: bearer
       bearerFormat: JWT
 security:
-  - jwt: []
+  - bearerAuth: []
