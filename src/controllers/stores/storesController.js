@@ -432,7 +432,7 @@ const getReviewsByStoreId = async (req, res) => {
       },
       {
         $lookup: {
-          from: 'users', // User 컬렉션과 조인
+          from: 'User', // User 컬렉션과 조인
           localField: 'userId',
           foreignField: '_id',
           as: 'user',
@@ -444,7 +444,7 @@ const getReviewsByStoreId = async (req, res) => {
       },
       {
         $lookup: {
-          from: 'reviewscores', // ReviewScore 컬렉션과 조인
+          from: 'ReviewScore', // ReviewScore 컬렉션과 조인
           localField: '_id',
           foreignField: 'reviewId',
           as: 'scores',
@@ -452,7 +452,7 @@ const getReviewsByStoreId = async (req, res) => {
       },
       {
         $lookup: {
-          from: 'reviewimgs', // 리뷰 이미지와 조인
+          from: 'ReviewImg', // 리뷰 이미지와 조인
           localField: '_id',
           foreignField: 'reviewId',
           as: 'images',
@@ -460,7 +460,7 @@ const getReviewsByStoreId = async (req, res) => {
       },
       {
         $lookup: {
-          from: 'reviewcomments', // 리뷰에 대한 댓글과 조인
+          from: 'ReviewComment', // 리뷰에 대한 댓글과 조인
           localField: '_id',
           foreignField: 'reviewId',
           as: 'comments',
@@ -498,7 +498,7 @@ const getReviewsByStoreId = async (req, res) => {
         { $match: { reviewId: { $in: reviewIds } } }, // 해당 가게의 리뷰들만 필터링
         {
           $lookup: {
-            from: 'reviewscales', // ReviewScale 컬렉션과 조인
+            from: 'ReviewScale', // ReviewScale 컬렉션과 조인
             localField: 'scaleId',
             foreignField: '_id',
             as: 'scale',
