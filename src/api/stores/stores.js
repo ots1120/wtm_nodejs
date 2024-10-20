@@ -23,7 +23,7 @@ router.get('/:storeId/menus', storesController.getMenusByStoreId);
 router.post(
   '/:storeId/menus',
   menuImgUpload.array('menuImages', 5),
-  authenticateUser,
+  // authenticateUser,
   storesController.addMenu
 );
 
@@ -33,7 +33,7 @@ router.get('/:storeId/notices', storesController.getNoticesByStoreId);
 // 가게 티켓 정보 조회
 router.get(
   '/:storeId/tickets',
-  authenticateUser,
+  // authenticateUser,
   storesController.getTicketsByStoreId
 );
 
@@ -44,7 +44,7 @@ router.get('/:storeId/reviews', storesController.getReviewsByStoreId);
 router.post(
   '/:storeId/reviews',
   reviewImgUpload.array('reviewImages', 5),
-  authenticateUser,
+  // authenticateUser,
   storesController.addReview
 );
 

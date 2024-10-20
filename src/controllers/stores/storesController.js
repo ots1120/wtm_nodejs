@@ -127,7 +127,7 @@ const addMenu = async (req, res) => {
   try {
     const { mainMenu, soupMenu, etcMenus } = req.body;
     const storeId = req.params.storeId;
-
+    console.log('메뉴 등록 시도 중:', { mainMenu, soupMenu, etcMenus, storeId });
     //test용 userId 설정
     const userId = new mongoose.Types.ObjectId('670a3e34dc6751089c16a0ad'); // 임의로 설정한 userId
     console.log('테스트용 userId:', userId);
@@ -137,9 +137,19 @@ const addMenu = async (req, res) => {
 
     // 특정 storeId에 오늘의 Meal이 이미 있는지 확인
     let meal = await MealModel.findOne({ mealDate, storeId });
+    // 이미 존재하는 Meal이 없으면 새로운 Meal 생성
     if (!meal) {
-      meal = new MealModel({ mealDate, storeId });
-      await meal.save();
+      try {
+        meal = new MealModel({ mealDate, storeId });
+        await meal.save();
+      } catch (error) {
+        // 중복 키 오류 발생 시 기존 Meal을 가져옴
+        if (error.code === 11000) {
+          meal = await MealModel.findOne({ mealDate, storeId });
+        } else {
+          throw error; // 다른 오류는 처리하지 않음
+        }
+      }
     }
 
     // 카테고리 찾기 (주메뉴, 국, 기타 메뉴)
@@ -151,9 +161,9 @@ const addMenu = async (req, res) => {
 
     const [mainMenuCategory, soupMenuCategory, etcMenuCategory] = categories;
 
-    // 카테고리 확인 (존재하지 않을 경우 처리)
+    // 카테고리 확인 (null일 경우 오류 반환)
     if (!mainMenuCategory || !soupMenuCategory || !etcMenuCategory) {
-      return res.status(400).json({ message: '카테고리가 올바르지 않습니다.' });
+      return res.status(400).json({ message: '카테고리 중 하나 이상을 찾을 수 없습니다.' });
     }
 
     // 메뉴 데이터 생성 - 주메뉴, 국, 기타 메뉴
